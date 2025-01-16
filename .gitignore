@@ -1,0 +1,6 @@
+.env
+__pycache__/azure_ai_search.cpython-312.pyc
+__pycache__/azure_open_ai_client.cpython-312.pyc
+__pycache__/document_processor.cpython-312.pyc
+__pycache__/open_ai_client.cpython-312.pyc
+__pycache__/settings.cpython-312.pyc

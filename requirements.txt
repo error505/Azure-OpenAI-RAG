@@ -1,0 +1,10 @@
+python-dotenv
+fastapi
+azure-cosmos
+openai
+streamlit
+python-docx
+azure-search-documents 
+markitdown
+PyPDF2
+numpy
