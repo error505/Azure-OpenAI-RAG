@@ -1,5 +1,5 @@
 from openai import OpenAI
-from settings import OPENAI_API_KEY
+from src.services.settings import OPENAI_API_KEY
 
 
 def create_chatgpt_openai_client():

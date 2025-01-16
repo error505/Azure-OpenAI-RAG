@@ -1,9 +1,10 @@
 from datetime import datetime
 from docx import Document
 import PyPDF2
-from open_ai_client import create_chatgpt_openai_client
+from src.services.open_ai_client import create_chatgpt_openai_client
 import numpy as np
 from markitdown import MarkItDown
+
 
 openai = create_chatgpt_openai_client()
 

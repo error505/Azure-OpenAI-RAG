@@ -1,7 +1,7 @@
 from azure.search.documents import SearchClient
 from azure.search.documents.indexes import SearchIndexClient
 from azure.core.credentials import AzureKeyCredential
-from settings import AZURE_AI_SEARCH_ENDPOINT, AZURE_AI_SEARCH_API_KEY, AZURE_AI_SEARCH_INDEX_NAME
+from src.services.settings import AZURE_AI_SEARCH_ENDPOINT, AZURE_AI_SEARCH_API_KEY, AZURE_AI_SEARCH_INDEX_NAME
 from azure.search.documents.indexes.models import (
     VectorSearch,
     HnswAlgorithmConfiguration,
@@ -15,7 +15,7 @@ from azure.search.documents.indexes.models import (
     VectorSearchProfile,
     VectorSearchAlgorithmMetric,
 )
-from document_processor import get_embedding
+from src.services.document_processor import get_embedding
 
 
 # Azure Search setup
@@ -73,8 +73,7 @@ def create_index_if_not_exists():
                 SearchableField(name="content", type=SearchFieldDataType.String),
                 content_vector_field
             ],
-            vector_search=vector_search,
-            ScoringProfile="content_boosting_profile",  # Scoring profile for boosting 'content' field
+            vector_search=vector_search
         )
         index_client.create_or_update_index(index)
         print("Index created.")
