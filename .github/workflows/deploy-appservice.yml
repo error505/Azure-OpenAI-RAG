@@ -1,0 +1,50 @@
+name: Deploy to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Python and create a virtual environment
+    - name: Set up Python and Virtual Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Create and Activate Virtual Environment
+      run: |
+        python -m venv $(pwd)/WebApp/antenv
+        source $(pwd)/WebApp/antenv/bin/activate
+        pip install --upgrade pip
+        pip install -r WebApp/requirements.txt
+
+    # Step 3: Login to Azure
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Step 4: Zip the application for deployment
+    - name: Zip the Application
+      run: |
+        cd WebApp
+        zip -r ../WebApp.zip .
+
+    # Step 5: Deploy to Azure Web App
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: rag  # Replace with your app name
+        slot-name: 'production'  # Optional: Deployment slot
+        package: WebApp.zip
+        publish-profile: ${{ secrets.APP_SERVICE_PUBLISH_PROFILE }}
