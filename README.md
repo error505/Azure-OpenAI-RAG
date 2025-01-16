@@ -2,6 +2,9 @@
 
 This project implements a Retrieval-Augmented Generation (RAG) system using Azure OpenAI, Azure AI Search, Native OpenAI, and Streamlit. The application is deployed as an Azure Web App using GitHub Actions for continuous integration and deployment.
 
+![image](https://github.com/user-attachments/assets/2c9a574c-61ff-421b-b040-df3839c242e6)
+
+
 ## Table of Contents
 
 - [RAG Project](#rag-project)
