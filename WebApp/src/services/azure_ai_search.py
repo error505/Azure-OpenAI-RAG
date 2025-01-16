@@ -16,6 +16,7 @@ from azure.search.documents.indexes.models import (
     VectorSearchAlgorithmMetric,
 )
 from src.services.document_processor import get_embedding
+from src.services.document_processor import process_file, create_documents
 
 
 # Azure Search setup
@@ -143,3 +144,17 @@ def search_documents(query):
         print(f"Document ID: {result['id']}, Title: {result['file_name']}, Score: {result['@search.score']}, Content: {result.get('content', 'No content found')}")
 
     return context
+
+
+def handle_upload_documents(documents):
+    create_index_if_not_exists()
+    # Upload documents to Azure AI Search
+    file_contents = process_file(documents)
+
+    # Create documents for search indexing
+    documents = create_documents(file_contents, documents)
+
+    # Upload chunks to Azure AI Search
+    search_client = get_search_client()
+    search_client.upload_documents(documents=documents)
+    print("Documents uploaded to Azure AI Search.")
