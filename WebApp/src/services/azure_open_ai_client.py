@@ -1,5 +1,5 @@
 from openai import AzureOpenAI
-from src.services.settings import AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT
+from src.utils.settings import AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT
 
 
 def create_azure_openai_client():

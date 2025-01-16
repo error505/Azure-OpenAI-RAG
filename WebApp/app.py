@@ -5,7 +5,7 @@ from src.services.azure_ai_search import (
 )
 
 from src.services.document_processor import process_file, create_documents
-from src.services.settings import (
+from src.utils.settings import (
     ALLOWED_FILE_TYPES
 )
 from src.ui.sidebar import render_sidebar

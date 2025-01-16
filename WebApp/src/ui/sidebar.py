@@ -1,5 +1,5 @@
 import streamlit as st
-from src.services.settings import (
+from src.utils.settings import (
     AVAILABLE_MODELS,
     API_OPTIONS,
     DEFAULT_TEMPERATURE,
