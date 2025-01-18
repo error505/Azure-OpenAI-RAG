@@ -14,13 +14,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Azure CLI
-      uses: azure/cli@v2.1.0
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-        azcliversion: 'latest'
-        inlineScript: |
-          # Log in to Azure
-          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-          # Deploy Bicep Template
-          az deployment group create --resource-group <your-resource-group> --template-file Infrastructure/main.bicep
+    - name: Deploy Bicep Template
+      run: |
+        az deployment group create \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --template-file bicep/main.bicep \
+          --parameters aadClientId=${{ secrets.AZURE_AD_CLIENT_ID }}
+      env:
+        AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
