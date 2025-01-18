@@ -23,6 +23,21 @@ resource searchService 'Microsoft.Search/searchServices@2024-06-01-preview' = {
   }
 }
 
+resource openAiResource 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
+  name: 'openai-${uniqueString(resourceGroup().id)}'
+  location: location
+  sku: {
+    name: 'S0' // Standard SKU
+  }
+  kind: 'OpenAI'
+  properties: {
+    apiProperties: {
+      enableOpenAI: true
+    }
+    customSubDomainName: 'openai-${uniqueString(resourceGroup().id)}'
+  }
+}
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageAccountName
   location: location
@@ -95,19 +110,19 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
         }
         {
           name: 'AZURE_OPENAI_API_KEY'
-          value: azureOpenAiApiKey
+          value: listKeys(openAiResource.id, '2023-05-01').primaryKey
         }
         {
           name: 'AZURE_OPENAI_ENDPOINT'
-          value: azureOpenAiEndpoint
+          value: openAiResource.properties.endpoint
         }
         {
           name: 'AZURE_AI_SEARCH_ENDPOINT'
-          value: azureAiSearchEndpoint
+          value: searchService.properties.hostName
         }
         {
           name: 'AZURE_AI_SEARCH_API_KEY'
-          value: azureAiSearchApiKey
+          value: listAdminKeys(searchService.id, '2024-06-01-preview').primaryKey
         }
         {
           name: 'AZURE_AI_SEARCH_INDEX_NAME'
@@ -124,7 +139,15 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
   }
 }
 
+
 output webAppName string = webApp.name
 output searchServiceName string = searchService.name
 output cosmosDbName string = cosmosDbAccount.name
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
+output openAiResourceName string = openAiResource.name
+output openAiResourceEndpoint string = openAiResource.properties.endpoint
+output openAiApiKey string = openAiResource.listKeys().primaryKey
+output azureOpenAiEndpoint string = openAiResource.properties.endpoint
+output aiSearchEndpoint string = searchService.properties.hostName
+output aiSearchApiKey string = searchService.listAdminKeys().primaryKey
+
