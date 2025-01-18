@@ -16,29 +16,29 @@ jobs:
       uses: actions/checkout@v3
 
     # Step 2: Set up Python and create a virtual environment
-    - name: Set up Python and Virtual Environment
+    - name: Set up Python and Install Dependencies
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    - name: Create and Activate Virtual Environment
+    - name: Install Dependencies
       run: |
-        python -m venv $(pwd)/WebApp/antenv
-        source $(pwd)/WebApp/antenv/bin/activate
+        python -m venv venv
+        source venv/bin/activate
         pip install --upgrade pip
         pip install -r WebApp/requirements.txt
 
-    # Step 3: Login to Azure
+    # Step 3: Zip the application, excluding virtual environment
+    - name: Prepare Deployment Package
+      run: |
+        cd WebApp
+        zip -r ../WebApp.zip . -x "venv/**" "*.pyc" "__pycache__/**"
+
+    # Step 4: Login to Azure
     - name: Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    # Step 4: Zip the application for deployment
-    - name: Zip the Application
-      run: |
-        cd WebApp
-        zip -r ../WebApp.zip .
 
     # Step 5: Deploy to Azure Web App
     - name: Deploy to Azure Web App
