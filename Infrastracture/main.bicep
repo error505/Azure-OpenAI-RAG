@@ -60,19 +60,19 @@ resource webAppServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   }
 }
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-11-15' = {
-  name: cosmosDbName
-  location: location
-  kind: 'GlobalDocumentDB'
-  properties: {
-    databaseAccountOfferType: 'Standard'
-    locations: [
-      {
-        locationName: location
-      }
-    ]
-  }
-}
+// resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-11-15' = {
+//   name: cosmosDbName
+//   location: location
+//   kind: 'GlobalDocumentDB'
+//   properties: {
+//     databaseAccountOfferType: 'Standard'
+//     locations: [
+//       {
+//         locationName: location
+//       }
+//     ]
+//   }
+// }
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: aiName
@@ -94,7 +94,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
       appSettings: [
         {
           name: 'COSMOS_DB_CONNECTION_STRING'
-          value: cosmosDbAccount.listKeys().primaryMasterKey
+          value: 'cosmosDbAccount.listKeys().primaryMasterKey'
         }
         {
           name: 'DATABASE_NAME'
@@ -141,7 +141,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
 
 output webAppName string = webApp.name
 output searchServiceName string = searchService.name
-output cosmosDbName string = cosmosDbAccount.name
+output cosmosDbName string = 'cosmosDbAccount.name'
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
 output openAiResourceName string = openAiResource.name
 output azureOpenAiEndpoint string = openAiResource.properties.endpoint
