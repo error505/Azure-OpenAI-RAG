@@ -9,5 +9,3 @@ markitdown
 PyPDF2
 numpy
 tiktoken
-matplotlib 
-pandas
