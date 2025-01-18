@@ -2,8 +2,6 @@ param location string = resourceGroup().location
 param aiSearchServiceName string = 'ai-search-service-${uniqueString(resourceGroup().id)}'
 param webAppName string = 'webapp-${uniqueString(resourceGroup().id)}'
 param aiName string = 'appinsights-${uniqueString(resourceGroup().id)}'
-param storageAccountName string = 'storage${uniqueString(resourceGroup().id)}'
-param cosmosDbName string = 'cosmosdb-${uniqueString(resourceGroup().id)}'
 param openAiApiKey string
 
 var openAiKeys = openAiResource.listKeys()
@@ -38,14 +36,6 @@ resource openAiResource 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   }
 }
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: storageAccountName
-  location: location
-  sku: {
-    name: 'Standard_LRS'
-  }
-  kind: 'StorageV2'
-}
 
 resource webAppServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: 'webappserviceplan-${uniqueString(resourceGroup().id)}'
@@ -133,15 +123,20 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
           value: appInsights.properties.InstrumentationKey
         }
       ]
+      alwaysOn: true
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
+      scmMinTlsVersion: '1.2'
+      scmIpSecurityRestrictionsDefaultAction: 'Allow'
+      ipSecurityRestrictionsDefaultAction: 'Allow'
+      pythonVersion: '3.11'
+      appCommandLine: 'python -m uvicorn main:app'
     }
   }
   dependsOn: [
     openAiResource
     searchService
     appInsights
-    storageAccount
   ]
 }
 

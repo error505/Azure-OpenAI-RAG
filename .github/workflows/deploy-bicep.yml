@@ -28,6 +28,7 @@ jobs:
       run: |
         az deployment group create \
           --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --name deploy-bicep \
           --template-file ./Infrastracture/main.bicep \
           --parameters openAiApiKey=${{ secrets.OPEN_AI_API_KEY }}
       env:
