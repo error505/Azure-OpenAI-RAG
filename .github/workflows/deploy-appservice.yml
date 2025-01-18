@@ -1,4 +1,4 @@
-name: Deploy to Azure Web App
+name: Build and Deploy Python App to Azure Web App
 
 on:
   push:
@@ -7,16 +7,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the code
+    # Step 1: Checkout the Code
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python and create a virtual environment
-    - name: Set up Python and Install Dependencies
+    # Step 2: Set up Python and Install Dependencies
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
@@ -26,24 +26,46 @@ jobs:
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
-        pip install -r WebApp/requirements.txt
+        pip install -r requirements.txt
 
-    # Step 3: Zip the application, excluding virtual environment
+    # Step 3: Zip the Application (excluding unnecessary files)
     - name: Prepare Deployment Package
       run: |
-        cd WebApp
-        zip -r ../WebApp.zip . -x "venv/**" "*.pyc" "__pycache__/**"
+        zip -r release.zip . -x "venv/**" "*.pyc" "__pycache__/**"
 
-    # Step 4: Login to Azure
+    # Step 4: Upload Artifact for Deployment
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-app
+        path: release.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    # Step 1: Download the Build Artifact
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: python-app
+
+    # Step 2: Unzip the Artifact
+    - name: Unzip Artifact
+      run: unzip release.zip
+
+    # Step 3: Login to Azure
     - name: Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # Step 5: Deploy to Azure Web App
+    # Step 4: Deploy to Azure Web App
     - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
+      uses: azure/webapps-deploy@v3
+      id: deploy-to-webapp
       with:
         app-name: webapp-z25l7o43hwqe6  # Replace with your app name
-        package: WebApp.zip
+        package: release.zip
         publish-profile: ${{ secrets.APP_SERVICE_PUBLISH_PROFILE }}
