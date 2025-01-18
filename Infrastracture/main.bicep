@@ -5,10 +5,10 @@ param aiName string = 'appinsights-${uniqueString(resourceGroup().id)}'
 param storageAccountName string = 'storage${uniqueString(resourceGroup().id)}'
 param cosmosDbName string = 'cosmosdb-${uniqueString(resourceGroup().id)}'
 param openAiApiKey string
-param azureOpenAiApiKey string
-param azureOpenAiEndpoint string
-param azureAiSearchApiKey string
-param azureAiSearchEndpoint string
+
+var openAiKeys = openAiResource.listKeys()
+var searchAdminKeys = searchService.listAdminKeys()
+var aiSearchEndpoint = 'https://${searchService.name}.search.windows.net'
 
 resource searchService 'Microsoft.Search/searchServices@2024-06-01-preview' = {
   name: aiSearchServiceName
@@ -110,7 +110,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
         }
         {
           name: 'AZURE_OPENAI_API_KEY'
-          value: listKeys(openAiResource.id, '2023-05-01').primaryKey
+          value: openAiKeys.key1
         }
         {
           name: 'AZURE_OPENAI_ENDPOINT'
@@ -118,11 +118,11 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
         }
         {
           name: 'AZURE_AI_SEARCH_ENDPOINT'
-          value: searchService.properties.hostName
+          value: aiSearchEndpoint
         }
         {
           name: 'AZURE_AI_SEARCH_API_KEY'
-          value: listAdminKeys(searchService.id, '2024-06-01-preview').primaryKey
+          value: searchAdminKeys.primaryKey
         }
         {
           name: 'AZURE_AI_SEARCH_INDEX_NAME'
@@ -139,15 +139,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
   }
 }
 
-
 output webAppName string = webApp.name
 output searchServiceName string = searchService.name
 output cosmosDbName string = cosmosDbAccount.name
 output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
 output openAiResourceName string = openAiResource.name
-output openAiResourceEndpoint string = openAiResource.properties.endpoint
-output openAiApiKey string = openAiResource.listKeys().primaryKey
 output azureOpenAiEndpoint string = openAiResource.properties.endpoint
-output aiSearchEndpoint string = searchService.properties.hostName
-output aiSearchApiKey string = searchService.listAdminKeys().primaryKey
-
+output aiSearchEndpoint string = aiSearchEndpoint
