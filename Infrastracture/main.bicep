@@ -130,7 +130,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
       scmIpSecurityRestrictionsDefaultAction: 'Allow'
       ipSecurityRestrictionsDefaultAction: 'Allow'
       pythonVersion: '3.11'
-      appCommandLine: 'python -m uvicorn main:app'
+      appCommandLine: 'python -m streamlit run app.py --server.port 8000 --server.address 0.0.0.0'
     }
   }
   dependsOn: [
