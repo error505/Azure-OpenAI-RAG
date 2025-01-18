@@ -23,7 +23,7 @@ jobs:
       run: |
         az deployment group create \
           --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-          --template-file Infrastructure/main.bicep \
+          --template-file ./Infrastructure/main.bicep \
           --parameters aadClientId=${{ secrets.AZURE_AD_CLIENT_ID }}
       env:
         AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
