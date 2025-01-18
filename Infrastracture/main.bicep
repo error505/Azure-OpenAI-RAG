@@ -137,7 +137,14 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
       minTlsVersion: '1.2'
     }
   }
+  dependsOn: [
+    openAiResource
+    searchService
+    appInsights
+    storageAccount
+  ]
 }
+
 
 output webAppName string = webApp.name
 output searchServiceName string = searchService.name
