@@ -19,9 +19,10 @@ if "messages" not in st.session_state:
 # Render sidebar and get parameters
 model_option, api_option, temperature, max_tokens = render_sidebar()
 # Update the interface with the previous messages
-render_chat_interface(model_option, api_option, temperature, max_tokens)
-# File uploader functionality
 uploaded_file = st.file_uploader("Upload a file", type=ALLOWED_FILE_TYPES)
+render_chat_interface(model_option, api_option, temperature, max_tokens)
+
+# File uploader functionality
 if uploaded_file:
     # Process the file
     handle_upload_documents(uploaded_file)

@@ -15,10 +15,13 @@ def render_chat_interface(model_option: str, api_option: str, temperature: float
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # Get and display assistant response
-        assistant_reply = get_chat_response(
-            prompt, api_option, model_option, temperature, max_tokens
-        )
-        add_message("assistant", assistant_reply)
+        response, total_tokens, cost = get_chat_response(prompt, api_option, model_option, temperature, max_tokens)
+
+        # Update the sidebar with token usage and cost information
+        st.sidebar.write(f"Total Tokens Used: {total_tokens}")
+        st.sidebar.write(f"Cost: ${cost:.4f}")  # Display cost with 4 decimal places
+        add_message("assistant", response)
+
         with st.chat_message("assistant"):
-            st.markdown(assistant_reply)
+            st.markdown(response)
+

@@ -8,3 +8,6 @@ azure-search-documents
 markitdown
 PyPDF2
 numpy
+tiktoken
+matplotlib 
+pandas

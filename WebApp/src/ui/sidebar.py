@@ -8,9 +8,7 @@ from src.utils.settings import (
 
 
 def render_sidebar():
-    # st.sidebar.title("OpenAI ChatGPT with File Upload and Azure AI Search")
-    # logo_url = "https://animatesvg.error505.com/logo.png"
-    # st.sidebar.image(logo_url, width=75)
+    # Render model selection and other parameters
     st.sidebar.title("ChatGPT Model Selection")
     model_option = st.sidebar.selectbox("Select Model", AVAILABLE_MODELS)
     
@@ -30,5 +28,9 @@ def render_sidebar():
         max_value=4096,
         value=DEFAULT_MAX_TOKENS
     )
-    
+
+    # Token usage and cost (initial values)
+    st.sidebar.title("Token Usage and Cost")
+    st.sidebar.write("Token usage and costs will be displayed here after querying.")
+
     return model_option, api_option, temperature, max_tokens
