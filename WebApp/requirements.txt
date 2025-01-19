@@ -1,12 +1,11 @@
 python-dotenv
-# fastapi
-# azure-cosmos
+azure-cosmos
 openai
 streamlit
+authlib
 python-docx
 azure-search-documents 
 markitdown
 PyPDF2
 numpy
 tiktoken
-authlib
