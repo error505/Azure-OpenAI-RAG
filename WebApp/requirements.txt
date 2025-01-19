@@ -9,3 +9,4 @@ markitdown
 PyPDF2
 numpy
 tiktoken
+authlib

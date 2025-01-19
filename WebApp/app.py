@@ -1,30 +1,30 @@
 import streamlit as st
-from src.services.azure_ai_search import (
-    handle_upload_documents
-)
-
-from src.utils.settings import (
-    ALLOWED_FILE_TYPES
-)
+from src.services.azure_ai_search import handle_upload_documents
+from src.utils.settings import ALLOWED_FILE_TYPES
 from src.ui.sidebar import render_sidebar
 from src.ui.chat_interface import render_chat_interface
+from src.services.auth import display_authenticated_content, check_authentication, handle_github_callback  # Import functions
 
-# Give title to the page
-st.title("OpenAI ChatGPT with File Upload and Azure AI Search")
+# Check if the user is authenticated at the start
+if not check_authentication():  # Use check_authentication() here to check if the user is authenticated
+    handle_github_callback()  # Check if we need to process a GitHub callback
+    display_authenticated_content()  # Show the authentication process
+else:
+    # If authenticated, show the landing page content
+    st.title("OpenAI ChatGPT with File Upload and Azure AI Search")
 
+    if "messages" not in st.session_state:
+        st.session_state["messages"] = []
 
-if "messages" not in st.session_state:
-    st.session_state["messages"] = []
+    # Render sidebar and get parameters
+    model_option, api_option, temperature, max_tokens = render_sidebar()
 
-# Render sidebar and get parameters
-model_option, api_option, temperature, max_tokens = render_sidebar()
-# Update the interface with the previous messages
-uploaded_file = st.file_uploader("Upload a file", type=ALLOWED_FILE_TYPES)
-render_chat_interface(model_option, api_option, temperature, max_tokens)
+    # Handle file uploads
+    uploaded_file = st.file_uploader("Upload a file", type=ALLOWED_FILE_TYPES)
+    render_chat_interface(model_option, api_option, temperature, max_tokens)
 
-# File uploader functionality
-if uploaded_file:
-    # Process the file
-    handle_upload_documents(uploaded_file)
-
-    st.sidebar.write("Uploaded chunks to Azure AI Search.")
+    # File uploader functionality
+    if uploaded_file:
+        # Process the file
+        handle_upload_documents(uploaded_file)
+        st.sidebar.write("Uploaded chunks to Azure AI Search.")
