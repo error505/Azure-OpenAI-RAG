@@ -3,6 +3,9 @@ param aiSearchServiceName string = 'ai-search-service-${uniqueString(resourceGro
 param webAppName string = 'webapp-${uniqueString(resourceGroup().id)}'
 param aiName string = 'appinsights-${uniqueString(resourceGroup().id)}'
 param openAiApiKey string
+param githubClientId string
+@secure()
+param githubClienSecret string
 
 var openAiKeys = openAiResource.listKeys()
 var searchAdminKeys = searchService.listAdminKeys()
@@ -123,6 +126,14 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
           value: appInsights.properties.InstrumentationKey
+        }
+        { 
+          name: 'GITHUB_CLIENT_ID'
+          value: githubClientId
+        }
+        {
+          name: 'GITHUB_CLIENT_SECRET'
+          value: githubClienSecret
         }
       ]
       alwaysOn: true
