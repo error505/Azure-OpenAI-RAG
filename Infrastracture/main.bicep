@@ -41,14 +41,16 @@ resource webAppServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: 'webappserviceplan-${uniqueString(resourceGroup().id)}'
   location: location
   sku: {
-    name: 'F1' // Free tier
-    tier: 'Free'
+    name: 'B1' // Basic tier
+    tier: 'Basic'
+    capacity: 1  // Adjust this if scaling is required
   }
   kind: 'app'
   properties: {
     reserved: true
   }
 }
+
 
 // resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2022-11-15' = {
 //   name: cosmosDbName
