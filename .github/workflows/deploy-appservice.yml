@@ -23,15 +23,19 @@ jobs:
 
     - name: Install Dependencies
       run: |
+        cd WebApp
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
         pip install -r requirements.txt
+        cd ..
 
     # Step 3: Zip the Application (excluding unnecessary files)
     - name: Prepare Deployment Package
       run: |
-        zip -r release.zip . -x "venv/**" "*.pyc" "__pycache__/**"
+        cd WebApp
+        zip -r ../release.zip . -x "venv/**" "*.pyc" "__pycache__/**"
+        cd ..
 
     # Step 4: Upload Artifact for Deployment
     - name: Upload Artifact
