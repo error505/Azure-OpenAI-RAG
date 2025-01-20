@@ -109,7 +109,19 @@ def handle_github_callback():
         )
         st.session_state["github_token"] = token
         st.session_state["is_authenticated"] = True
+        
+        # Fetch the user's GitHub profile after successful authentication
+        headers = {"Authorization": f"Bearer {token['access_token']}"}
+        github_data = oauth.get("https://api.github.com/user", headers=headers)
+        
+        # Store the GitHub user data in session state
+        st.session_state["github_user"] = github_data.json()  # Store user data
+
+        # Save user_id from the GitHub profile
+        st.session_state["user_id"] = st.session_state["github_user"]["id"]
+
         st.rerun()  # Trigger a rerun to refresh the page and show the real content
+
 
 
 def display_authenticated_content():
