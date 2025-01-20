@@ -36,9 +36,6 @@ def get_chats(user_id):
     Fetches all the chats for a specific user from CosmosDB.
     Returns a list of conversations filtered by user_id.
     """
-    # Log the user_id for debugging
-    print(f"Fetching chats for user_id: {user_id}")
-    
     # Query to fetch only the chats belonging to the current user
     query = f"SELECT * FROM c WHERE c.user_id = {user_id}"  # Ensure no quotes around the integer
     items = list(
@@ -46,9 +43,6 @@ def get_chats(user_id):
             query=query, enable_cross_partition_query=True
         )
     )
-    
-    # Log the items returned from the query
-    print("Items:", items)
     
     return items
 
