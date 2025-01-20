@@ -5,7 +5,7 @@ from src.services.azure_cosmos_db import save_chat_to_cosmosdb
 import streamlit as st
 from datetime import datetime, timezone
 import uuid
-from src.services.auth import check_authentication 
+from src.services.auth import check_authentication
 import tiktoken
 
 
