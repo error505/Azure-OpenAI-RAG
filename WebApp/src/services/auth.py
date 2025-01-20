@@ -123,7 +123,6 @@ def handle_github_callback():
         st.rerun()  # Trigger a rerun to refresh the page and show the real content
 
 
-
 def display_authenticated_content():
     """
     Displays the authenticated user's content after successful GitHub authentication.

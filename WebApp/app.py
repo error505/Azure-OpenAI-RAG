@@ -17,7 +17,7 @@ else:
         st.session_state["messages"] = []
 
     # Render sidebar and get parameters
-    model_option, api_option, temperature, max_tokens = render_sidebar()
+    model_option, api_option, temperature, max_tokens, conversation_id = render_sidebar()
 
     # Handle file uploads
     uploaded_file = st.file_uploader("Upload a file", type=ALLOWED_FILE_TYPES)

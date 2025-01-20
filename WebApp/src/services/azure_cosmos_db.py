@@ -31,26 +31,26 @@ def save_chat_to_cosmosdb(chat, user_id):
         raise Exception(f"Error: Failed to save chat to Cosmos DB: {e}")
 
 
-def get_chats():
+def get_chats(user_id):
     """
-    Fetches all the chats.
+    Fetches all the chats for a specific user from CosmosDB.
+    Returns a list of conversations filtered by user_id.
     """
-    query = "SELECT * FROM c"
+    # Log the user_id for debugging
+    print(f"Fetching chats for user_id: {user_id}")
+    
+    # Query to fetch only the chats belonging to the current user
+    query = f"SELECT * FROM c WHERE c.user_id = {user_id}"  # Ensure no quotes around the integer
     items = list(
         container_chats.query_items(
             query=query, enable_cross_partition_query=True
         )
     )
-
-    # Fields to exclude
-    exclude_fields = {"_rid", "_self", "_etag", "_attachments", "_ts"}
-
-    filtered_items = [
-        {key: value for key, value in item.items() if key not in exclude_fields}
-        for item in items
-    ]
-
-    return filtered_items
+    
+    # Log the items returned from the query
+    print("Items:", items)
+    
+    return items
 
 
 # return items
