@@ -185,7 +185,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
         }
         {
           name: 'GITHUB_REDIRECT_URI'
-          value: 'https://${webAppName}.azurewebsites.net/callback'
+          value: 'https://${webAppName}.azurewebsites.net/'
         }
       ]
       alwaysOn: true
