@@ -183,6 +183,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
           name: 'GITHUB_CLIENT_SECRET'
           value: githubClienSecret
         }
+        {
+          name: 'GITHUB_REDIRECT_URI'
+          value: 'https://${webAppName}.azurewebsites.net/callback'
+        }
       ]
       alwaysOn: true
       ftpsState: 'Disabled'
