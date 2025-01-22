@@ -146,13 +146,13 @@ def search_documents(query):
     return context
 
 
-def handle_upload_documents(documents):
+def handle_upload_documents(documents, type_of_file, name):
     create_index_if_not_exists()
     # Upload documents to Azure AI Search
-    file_contents = process_file(documents)
+    file_contents = process_file(documents, type_of_file)
 
     # Create documents for search indexing
-    documents = create_documents(file_contents, documents)
+    documents = create_documents(file_contents, name, type_of_file)
 
     # Upload chunks to Azure AI Search
     search_client = get_search_client()

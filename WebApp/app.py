@@ -1,3 +1,4 @@
+import io
 import streamlit as st
 from src.services.azure_ai_search import handle_upload_documents
 from src.utils.settings import ALLOWED_FILE_TYPES
@@ -17,7 +18,7 @@ else:
         st.session_state["messages"] = []
 
     # Render sidebar and get parameters
-    model_option, api_option, temperature, max_tokens = render_sidebar()
+    model_option, api_option, temperature, max_tokens, conversation_id = render_sidebar()
 
     # Handle file uploads
     uploaded_file = st.file_uploader("Upload a file", type=ALLOWED_FILE_TYPES)
@@ -26,5 +27,9 @@ else:
     # File uploader functionality
     if uploaded_file:
         # Process the file
-        handle_upload_documents(uploaded_file)
+        type_of_file = uploaded_file.type
+        print("Uploaded file type:", type_of_file)
+        name = uploaded_file.name
+        file_stream = io.BytesIO(uploaded_file.getvalue())
+        handle_upload_documents(file_stream, type_of_file, name)
         st.sidebar.write("Uploaded chunks to Azure AI Search.")

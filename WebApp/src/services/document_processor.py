@@ -1,59 +1,100 @@
 from datetime import datetime
-from docx import Document
-import PyPDF2
+import streamlit as st
 from src.services.open_ai_client import create_chatgpt_openai_client
 import numpy as np
 from markitdown import MarkItDown
 
 
+# Initialize OpenAI and MarkItDown clients
 openai = create_chatgpt_openai_client()
-
 md = MarkItDown()
 
 
 # Function to get embedding from OpenAI for a given text chunk
 def get_embedding(text: str):
     response = openai.embeddings.create(  # Correct method for embeddings
-        model="text-embedding-ada-002",  # Embedding model to use
-        input=text
+        model="text-embedding-ada-002", input=text  # Embedding model to use
     )
     # Correct way to access the embedding
-    embedding = response.data[0].embedding  # Access data and embedding from the response
+    embedding = response.data[
+        0
+    ].embedding  # Access data and embedding from the response
     return np.array(embedding)
 
 
+# Function to chunk the text into smaller pieces
 def chunk_by_length(text, chunk_size=500):
-    return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
+
+    # Ensure the text is a string and not empty
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("The text provided is either not a string or is empty.")
+
+    clean_text = "".join(char if char.isprintable() else " " for char in text).strip()
+
+    # Debugging the cleaned text length
+    print(f"Cleaned text length: {len(clean_text)}")
+
+    # Chunk the content into smaller parts
+    chunks = [clean_text[i: i + 500] for i in range(0, len(clean_text), 500)]
+
+    print(f"Number of chunks: {len(chunks)}")  # Debugging number of chunks
+
+    return chunks
 
 
-def process_file(uploaded_file):
+# Function to process file and extract text
+def process_file(uploaded_file, type_of_file):
     file_contents = ""
-    
-    # Handle file based on type
-    if uploaded_file.type == "text/plain":
-        file_contents = uploaded_file.read().decode("utf-8")
-    elif uploaded_file.type == "application/pdf":
-        pdf_reader = PyPDF2.PdfReader(uploaded_file)
-        for page in pdf_reader.pages:
-            file_contents += page.extract_text()
-    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        doc = Document(uploaded_file)
-        file_contents = "\n".join([para.text for para in doc.paragraphs])
-    elif uploaded_file.type == "text/markdown":
-        file_contents = md(uploaded_file.read().decode("utf-8"))
-        
-    return file_contents
+
+    try:
+        if type_of_file in [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "text/plain",
+        ]:
+            # Read file as bytes and extract text using MarkItDown
+            result = md.convert_stream(uploaded_file)
+            file_contents = result.text_content  # Extract text using MarkItDown
+            print("File contents:", file_contents)
+        elif type_of_file in ["image/jpeg", "image/png"]:
+            # For image files (JPEG, PNG), use OCR to extract text
+            jp = MarkItDown(llm_client=openai, llm_model="gpt-4o")
+            result = jp.convert_stream(uploaded_file)
+            file_contents = result.text_content  # Use Tesseract OCR to extract text
+        else:
+            st.error(f"Unsupported file type: {type_of_file}")
+            return None  # Handle unsupported file types
+
+        if not file_contents:
+            raise ValueError("No text content was extracted from the file.")
+
+    except Exception as e:
+        st.error(f"Error processing file: {e}")
+        return None  # Ensure the function returns None if something goes wrong
+
+    return file_contents  # Return the extracted text content
 
 
-def create_documents(file_contents, uploaded_file, chunk_size=1000):
+# Function to create documents from the extracted file content
+def create_documents(file_contents, chunk_size=500, name=None, type_of_file=None):
+    if not file_contents:
+        st.error("No content available to create documents.")
+        return []  # Return an empty list if no valid content is found
+
+    # Chunk the content into smaller parts
     chunks = chunk_by_length(file_contents, chunk_size)
+
+    if not chunks:
+        st.error("No valid chunks created from the file content.")
+        return []  # Return an empty list if no chunks were created
+
     return [
         {
             "id": f"chunk-{i}",
             "content": chunk,
-            "file_name": uploaded_file.name,
-            "file_path": uploaded_file.name,
-            "file_type": uploaded_file.type,
+            "file_name": name,
+            "file_path": name,
+            "file_type": type_of_file,
             "file_size": len(file_contents),
             "file_created_at": datetime.now(),
             "file_updated_at": datetime.now(),
