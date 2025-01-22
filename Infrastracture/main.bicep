@@ -137,7 +137,7 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
       appSettings: [
         {
           name: 'COSMOS_DB_CONNECTION_STRING'
-          value: cosmosDbAccount.listKeys().primaryMasterKey
+          value: 'AccountEndpoint=${cosmosDbAccount.properties.documentEndpoint};AccountKey=${cosmosDbAccount.listKeys().primaryMasterKey};Database=Conversations'
         }
         {
           name: 'DATABASE_NAME'
