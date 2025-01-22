@@ -35,7 +35,7 @@ def chunk_by_length(text, chunk_size=500):
     print(f"Cleaned text length: {len(clean_text)}")
 
     # Chunk the content into smaller parts
-    chunks = [clean_text[i : i + 500] for i in range(0, len(clean_text), 500)]
+    chunks = [clean_text[i: i + 500] for i in range(0, len(clean_text), 500)]
 
     print(f"Number of chunks: {len(chunks)}")  # Debugging number of chunks
 
