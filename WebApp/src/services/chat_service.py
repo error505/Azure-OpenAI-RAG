@@ -33,9 +33,9 @@ def get_chat_response(prompt: str, api_option: str, model_option: str, temperatu
 
     # Call the respective function based on the API option
     if api_option == "Azure OpenAI":
-        response, total_tokens, cost = _get_azure_openai_response(conversation_history, model_option, temperature, max_tokens)
+        response, total_tokens, cost = _get_azure_openai_response(conversation_history, prompt, model_option, temperature, max_tokens)
     else:
-        response, total_tokens, cost = _get_native_openai_response(conversation_history, model_option, temperature, max_tokens)
+        response, total_tokens, cost = _get_native_openai_response(conversation_history, prompt, model_option, temperature, max_tokens)
 
     # Append the response to the conversation history
     conversation_history.append({"role": "assistant", "content": response})
@@ -59,7 +59,7 @@ def get_chat_response(prompt: str, api_option: str, model_option: str, temperatu
     return response, total_tokens, cost
 
 
-def _get_azure_openai_response(conversation_history, prompt: str, model: str, temperature: float, max_tokens: int):
+def _get_azure_openai_response(conversation_history, prompt, model, temperature, max_tokens):
     # Perform the document search to get relevant context from the documents
     results = search_documents(prompt)
     title_line = _extract_title_from_results(results)
