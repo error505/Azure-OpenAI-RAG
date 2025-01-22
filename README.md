@@ -4,6 +4,9 @@ This project implements a Retrieval-Augmented Generation (RAG) system using Azur
 
 ![image](https://github.com/user-attachments/assets/2c9a574c-61ff-421b-b040-df3839c242e6)
 
+We use GitHub for OUATH
+![image](https://github.com/user-attachments/assets/bf28f99f-0994-42d9-8b2c-7757915a5379)
+
 
 ## Table of Contents
 
