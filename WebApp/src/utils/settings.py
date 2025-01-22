@@ -16,7 +16,7 @@ AZURE_COSMOS_DB_DATABASE_NAME = os.getenv("DATABASE_NAME")
 AZURE_COSMOS_DB_CONTAINER_NAME = os.getenv("CONTAINER_NAME")
 
 # Model configurations
-AVAILABLE_MODELS = ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini"]
+AVAILABLE_MODELS = ["gpt-4o-mini", "gpt-4o-mini", "o1-preview", "o1-mini"]
 API_OPTIONS = ["Azure OpenAI", "Native OpenAI"]
 ALLOWED_FILE_TYPES = ["txt", "pdf", "docx", "md", "html", "csv", "json", "jpg", "jpeg", "png"] 
 

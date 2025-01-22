@@ -30,18 +30,18 @@ def authenticate_with_github():
             .title {
                 font-size: 40px;
                 font-weight: bold;
-                color: #24292f;
+                color: #1a855f;
                 text-align: center;
                 margin-top: 50px;
             }
             .description {
                 font-size: 18px;
-                color: #586069;
+                color: #1a855f;
                 text-align: center;
             }
             .auth-button {
                 display: inline-block;
-                background-color: #0366d6;
+                background-color: #1a855f;
                 color: white;
                 padding: 15px 30px;
                 border-radius: 5px;
@@ -53,7 +53,7 @@ def authenticate_with_github():
                 transition: background-color 0.3s;
             }
             .auth-button:hover {
-                background-color: #0056b3;
+                background-color: #35d099;
             }
             .container {
                 text-align: center;
@@ -77,15 +77,49 @@ def authenticate_with_github():
     # Add GitHub logo and link styled as a button
     st.markdown(
         """
-        <div class="container">
-            <p class="description">
-                Please go to this URL to authorize the app: 
-            </p>
-            <a class="auth-button" href="{}" target="_blank">
-                <img class="github-logo" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Logo">
-                Authorize with GitHub
-            </a>
-        </div>
+    <style>
+        .container {{
+            text-align: center;
+            margin-top: 50px;
+        }}
+        .description {{
+            font-size: 18px;
+            color: #586069;
+        }}
+        .auth-button {{
+            display: inline-block;
+            background-color: #0366d6;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }}
+        .auth-button:hover {{
+            background-color: #0056b3;
+        }}
+        .github-logo {{
+            width: 25px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }}
+        .auth-button:link, .auth-button:visited {{
+            color: white; /* Ensures the link text inside the button stays white */
+        }}
+    </style>
+    <div class="container">
+        <p class="description">
+            Please go to this URL to authorize the app:
+        </p>
+        <a class="auth-button" href="{0}" target="_blank">
+            <img class="github-logo" src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Logo">
+            Authorize with GitHub
+        </a>
+    </div>
     """.format(
             authorization_url
         ),
@@ -109,11 +143,11 @@ def handle_github_callback():
         )
         st.session_state["github_token"] = token
         st.session_state["is_authenticated"] = True
-        
+
         # Fetch the user's GitHub profile after successful authentication
         headers = {"Authorization": f"Bearer {token['access_token']}"}
         github_data = oauth.get("https://api.github.com/user", headers=headers)
-        
+
         # Store the GitHub user data in session state
         st.session_state["github_user"] = github_data.json()  # Store user data
 
