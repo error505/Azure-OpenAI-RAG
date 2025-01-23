@@ -31,12 +31,8 @@ def get_chat_response(prompt: str, api_option: str, model_option: str, temperatu
     # Append the new prompt to the conversation history
     conversation_history.append({"role": "user", "content": prompt})
 
-    # Call the respective function based on the API option
-    if api_option == "Azure OpenAI":
-        response, total_tokens, cost = _get_azure_openai_response(conversation_history, prompt, model_option, temperature, max_tokens)
-    else:
-        response, total_tokens, cost = _get_native_openai_response(conversation_history, prompt, model_option, temperature, max_tokens)
-
+    # Call the respective client based on the API option
+    response, total_tokens, cost = _get_openai_response(conversation_history, prompt, model_option, temperature, max_tokens, api_option)
     # Append the response to the conversation history
     conversation_history.append({"role": "assistant", "content": response})
     
@@ -59,7 +55,7 @@ def get_chat_response(prompt: str, api_option: str, model_option: str, temperatu
     return response, total_tokens, cost
 
 
-def _get_azure_openai_response(conversation_history, prompt, model, temperature, max_tokens):
+def _get_openai_response(conversation_history, prompt, model, temperature, max_tokens, api_option):
     # Perform the document search to get relevant context from the documents
     results = search_documents(prompt)
     title_line = _extract_title_from_results(results)
@@ -78,7 +74,7 @@ def _get_azure_openai_response(conversation_history, prompt, model, temperature,
     messages = [{"role": "system", "content": system_content}] + conversation_history
     
     # Initialize OpenAI client and get the response
-    client = create_azure_openai_client()
+    client = create_azure_openai_client() if api_option == "Azure OpenAI" else create_chatgpt_openai_client()    
     response = client.chat.completions.create(
         model=model,
         messages=messages,
@@ -92,24 +88,6 @@ def _get_azure_openai_response(conversation_history, prompt, model, temperature,
     # Calculate total tokens
     total_tokens = sum(len(tiktoken.encoding_for_model(model).encode(msg['content'])) for msg in messages) + output_tokens
     cost = total_tokens * 0.002  # Example cost, adjust as needed
-
-    return response.choices[0].message.content.strip(), total_tokens, cost
-
-
-def _get_native_openai_response(conversation_history, model, temperature, max_tokens):
-    client = create_chatgpt_openai_client()
-    response = client.chat.completions.create(
-        model=model,
-        messages=conversation_history,
-        temperature=temperature,
-        max_tokens=max_tokens,
-    )
-    # Extract the output tokens from the response
-    output_tokens = response.usage.total_tokens
-
-    # Calculate total tokens
-    total_tokens = sum(len(tiktoken.encoding_for_model(model).encode(msg['content'])) for msg in conversation_history) + output_tokens
-    cost = total_tokens * 0.002  # Example cost, assuming $0.002 per 1k tokens for Native OpenAI
 
     return response.choices[0].message.content.strip(), total_tokens, cost
 

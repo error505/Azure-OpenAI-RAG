@@ -11,19 +11,15 @@ if not check_authentication():  # Use check_authentication() here to check if th
     handle_github_callback()  # Check if we need to process a GitHub callback
     display_authenticated_content()  # Show the authentication process
 else:
-    # If authenticated, show the landing page content
-    st.title("OpenAI ChatGPT with File Upload and Azure AI Search")
-
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
 
     # Render sidebar and get parameters
     model_option, api_option, temperature, max_tokens, conversation_id = render_sidebar()
-
     # Handle file uploads
     uploaded_file = st.file_uploader("Upload a file", type=ALLOWED_FILE_TYPES)
     render_chat_interface(model_option, api_option, temperature, max_tokens)
-
+    
     # File uploader functionality
     if uploaded_file:
         # Process the file
