@@ -31,9 +31,6 @@ def chunk_by_length(text, chunk_size=500):
 
     clean_text = "".join(char if char.isprintable() else " " for char in text).strip()
 
-    # Debugging the cleaned text length
-    print(f"Cleaned text length: {len(clean_text)}")
-
     # Chunk the content into smaller parts
     chunks = [clean_text[i: i + 500] for i in range(0, len(clean_text), 500)]
 
@@ -55,12 +52,11 @@ def process_file(uploaded_file, type_of_file):
             # Read file as bytes and extract text using MarkItDown
             result = md.convert_stream(uploaded_file)
             file_contents = result.text_content  # Extract text using MarkItDown
-            print("File contents:", file_contents)
         elif type_of_file in ["image/jpeg", "image/png"]:
             # For image files (JPEG, PNG), use OCR to extract text
             jp = MarkItDown(llm_client=openai, llm_model="gpt-4o")
             result = jp.convert_stream(uploaded_file)
-            file_contents = result.text_content  # Use Tesseract OCR to extract text
+            file_contents = result.text_content  
         else:
             st.error(f"Unsupported file type: {type_of_file}")
             return None  # Handle unsupported file types

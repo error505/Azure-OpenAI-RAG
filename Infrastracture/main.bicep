@@ -39,6 +39,20 @@ resource openAiResource 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   }
 }
 
+resource speechServicesResource 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
+  name: 'speech-${uniqueString(resourceGroup().id)}'
+  location: location
+  sku: {
+    name: 'F0' // FREE SKU
+  }
+  kind: 'SpeechServices'
+  properties: {
+    apiProperties: {
+      enableSpeech: true
+    }
+    publicNetworkAccess: 'Enabled'
+  }
+}
 
 resource webAppServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: 'webappserviceplan-${uniqueString(resourceGroup().id)}'
@@ -187,6 +201,14 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
           name: 'GITHUB_REDIRECT_URI'
           value: 'https://${webAppName}.azurewebsites.net/'
         }
+        {
+          name: 'AZURE_SPEECH_KEY'
+          value: speechServicesResource.listKeys().key1
+        }
+        {
+          name: 'AZURE_SPEECH_ENDPOINT'
+          value: 'https://${speechServicesResource.name}.cognitiveservices.azure.com/'
+        }
       ]
       alwaysOn: true
       ftpsState: 'Disabled'
@@ -202,6 +224,8 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
     openAiResource
     searchService
     appInsights
+    cosmosDbContainer
+    speechServicesResource
   ]
 }
 
@@ -215,3 +239,5 @@ output appInsightsInstrumentationKey string = appInsights.properties.Instrumenta
 output openAiResourceName string = openAiResource.name
 output azureOpenAiEndpoint string = openAiResource.properties.endpoint
 output aiSearchEndpoint string = aiSearchEndpoint
+output speechServiceEndpoint string = 'https://${speechServicesResource.name}.cognitiveservices.azure.com/'
+output speechServiceKey string = speechServicesResource.listKeys().key1

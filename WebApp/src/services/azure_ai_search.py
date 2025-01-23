@@ -101,9 +101,6 @@ def search_documents(query):
     # Generate the query vector from the input text using your embedding model
     query_vector = get_embedding(query).tolist()  # Get the embedding for the query
 
-    # Debugging: Print the query vector to ensure it’s being generated correctly
-    print(f"Query vector: {query_vector}")
-
     # Construct the vector query with the 'kind' parameter set to "vector"
     vector_query = {
         "vector": query_vector,  # The query vector (embedding)
@@ -134,10 +131,6 @@ def search_documents(query):
         title = doc.get("file_name", "Unknown Title")  # Get the title (PDF file name)
         content = doc.get("content", "No content found")  # Get the content of the document
         context += f"Title: {title}\nContent: {content}\n\n"
-
-    # Debugging: Print the context to check its format
-    print("Context for OpenAI:")
-    print(context)
 
     # Display high-scoring results (for debugging)
     for result in results_list:
