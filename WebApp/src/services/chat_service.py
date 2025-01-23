@@ -87,8 +87,18 @@ def _get_openai_response(conversation_history, prompt, model, temperature, max_t
     
     # Calculate total tokens
     total_tokens = sum(len(tiktoken.encoding_for_model(model).encode(msg['content'])) for msg in messages) + output_tokens
-    cost = total_tokens * 0.002  # Example cost, adjust as needed
-
+    # Cost per 1k tokens for different models
+    model_costs = {
+        "gpt-4o-mini": 0.000150,  # $0.003 per 1K tokens
+        "gpt-4o": 0.00250,  # $0.03 per 1K tokens
+        "o1-preview": 0.0150,  # $0.06 per 1K tokens
+        "gpt-3.5": 0.000002,  # $0.002 per 1K tokens
+        "o1": 0.0150,  # $0.004 per 1K tokens
+        "gpt-35-turbo": 0.000002,  # Azure OpenAI GPT-3.5
+        "gpt-4-turbo": 0.00003,  # Azure OpenAI GPT-4
+        "o1-mini": 0.0030,  # OpenAI Mini
+    }
+    cost = total_tokens * model_costs.get(model, 0.000002)  # Default to GPT-3.5 pricing if model not found
     return response.choices[0].message.content.strip(), total_tokens, cost
 
 

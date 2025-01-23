@@ -4,9 +4,6 @@ This project implements a Retrieval-Augmented Generation (RAG) system using Azur
 
 ![image](https://github.com/user-attachments/assets/2c9a574c-61ff-421b-b040-df3839c242e6)
 
-We use GitHub for OUATH
-![image](https://github.com/user-attachments/assets/bf28f99f-0994-42d9-8b2c-7757915a5379)
-
 
 ## Table of Contents
 
@@ -19,6 +16,8 @@ We use GitHub for OUATH
     - [Prerequisites](#prerequisites)
     - [Installation Steps](#installation-steps)
   - [Usage](#usage)
+  - [We use GitHub for OUATH](#we-use-github-for-ouath)
+- [GitHub OAuth Setup Instructions](#github-oauth-setup-instructions)
   - [Deployment](#deployment)
     - [Using GitHub Actions](#using-github-actions)
   - [Contributing](#contributing)
@@ -84,6 +83,49 @@ The architecture of the project includes the following components:
 3. The system retrieves relevant documents using Azure AI Search.
 4. Azure OpenAI generates a response based on the retrieved documents.
 5. The response is displayed on the Streamlit interface.
+
+## We use GitHub for OUATH
+![image](https://github.com/user-attachments/assets/bf28f99f-0994-42d9-8b2c-7757915a5379)
+
+
+# GitHub OAuth Setup Instructions
+
+1. Go to GitHub Settings:
+   ```bash
+   # Navigate to GitHub.com -> Settings -> Developer settings -> OAuth Apps -> New OAuth App
+
+ ```bash
+   # Fill in the following fields:
+   Application name: <Your App Name>
+   Homepage URL: http://localhost:8501 
+   Authorization callback URL: http://localhost:8501/
+   ```
+
+4. Add secrets to your repository:
+   ```bash
+   # Go to your GitHub repo -> Settings -> Secrets and variables -> Actions
+   # Add two new repository secrets:
+   
+   Name: GITHUB_CLIENT_ID
+   Value: <your-client-id>
+
+   Name: GITHUB_CLIENT_SECRET 
+   Value: <your-client-secret>
+   ```
+
+5. Environment variables in your app:
+   ```bash
+   # Add to your .env file:
+   GITHUB_CLIENT_ID=<your-client-id>
+   GITHUB_CLIENT_SECRET=<your-client-secret>
+   ```
+
+6. For production deployment:
+   ```bash
+   # Update callback URL to your production domain:
+   Homepage URL: https://your-app-domain.com
+   Authorization callback URL: https://your-app-domain.com/
+   ```
 
 ## Deployment
 
