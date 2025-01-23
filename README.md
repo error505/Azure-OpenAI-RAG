@@ -44,6 +44,9 @@ The architecture of the project includes the following components:
 4. **Azure Web App**: For hosting the application.
 5. **GitHub Actions**: For continuous integration and deployment.
 
+![image](https://github.com/user-attachments/assets/44d79f31-8ced-4eb9-bd19-cff61f913b50)
+
+
 ## Setup and Installation
 
 ### Prerequisites
@@ -137,6 +140,9 @@ The architecture of the project includes the following components:
 2. Set up the GitHub Actions workflow for continuous deployment.
 3. Push your changes to the repository.
 4. GitHub Actions will automatically deploy the application to Azure Web App.
+
+   ![image](https://github.com/user-attachments/assets/59646594-b36b-4fd1-88a3-7bf65c99fe9b)
+
 
 ## Contributing
 
