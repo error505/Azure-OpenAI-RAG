@@ -93,6 +93,7 @@ The architecture of the project includes the following components:
 1. Go to GitHub Settings:
    ```bash
    # Navigate to GitHub.com -> Settings -> Developer settings -> OAuth Apps -> New OAuth App
+![image](https://github.com/user-attachments/assets/27a63543-eede-4fdb-a42f-aa068701dc97)
 
  ```bash
    # Fill in the following fields:
@@ -100,6 +101,7 @@ The architecture of the project includes the following components:
    Homepage URL: http://localhost:8501 
    Authorization callback URL: http://localhost:8501/
    ```
+![image](https://github.com/user-attachments/assets/c0f95a63-1038-407c-88d9-66700a59a205)
 
 4. Add secrets to your repository:
    ```bash
