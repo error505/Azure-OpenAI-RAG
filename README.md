@@ -85,7 +85,7 @@ The architecture of the project includes the following components:
 5. The response is displayed on the Streamlit interface.
 
 ## We use GitHub for OUATH
-![image](https://github.com/user-attachments/assets/bf28f99f-0994-42d9-8b2c-7757915a5379)
+![image](https://github.com/user-attachments/assets/fbdd49a8-9c40-4ae1-babc-a3783e093657)
 
 
 # GitHub OAuth Setup Instructions
