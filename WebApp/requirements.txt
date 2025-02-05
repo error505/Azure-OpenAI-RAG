@@ -11,4 +11,3 @@ numpy
 tiktoken
 audio_recorder_streamlit
 azure-cognitiveservices-speech
-openai-whisper
