@@ -14,7 +14,7 @@ def transcribe_with_azure(audio_path):
     """
     # Replace these with your Azure Speech resource credentials
     subscription_key = AZURE_SPEECH_KEY
-    region = "germanywestcentral"
+    # region = "germanywestcentral"
 
     # Configure the Azure Speech SDK
     speech_config = speechsdk.SpeechConfig(subscription=subscription_key, speech_recognition_language="en-US", endpoint="https://germanywestcentral.api.cognitive.microsoft.com/")

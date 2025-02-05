@@ -6,6 +6,7 @@ from src.utils.settings import OPENAI_API_KEY
 
 # Initialize Whisper model globally to avoid reloading it every time
 
+
 @st.cache_resource
 def load_whisper_model():
     return whisper.load_model("base")  # Choose between "tiny", "base", "small", "medium", or "large"
